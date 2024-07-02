@@ -1,0 +1,54 @@
+<%- include('./partials/header') %>
+
+<div class="md-conatainer mt-10">
+<h2 class="text-xl font-bold mb-4 text-center">User Profile</h2>
+<div class="bg-white p-6 rounded shadow-md max-w-4xl mx-auto">
+  <div class="flex flex-col md:flex-row items-center">
+   <a href="/users/update/<%= user._id %>"><img src=<%= user.Image %> alt="User Image" class="w-24 h-24 md:w-48 md:h-48 rounded-full mb-4 md:mb-0 md:mr-6">
+    </a>
+    
+    <div>
+      <h3 class="text-2xl font-bold"><%= user.fullname %></h3>
+      <p class="text-gray-700"><strong>Email:</strong> <%= user.email %></p>
+      <p class="text-gray-700"><strong>Address:</strong> <%= user.address %></p>
+      <p class="text-gray-700"><strong>Contact Number:</strong></p>
+      <ul class="list-disc pl-5 text-gray-700">
+        <% user.contactNumbers.forEach(number => { %>
+        <li><%= number %></li>
+        <% }) %>
+      </ul>
+    </div>
+  </div>
+
+  <h3 class="text-lg font-bold mt-6">Orders</h3>
+  <ul class="list-disc pl-5">
+    <% if(user.orders.length){ %>
+    <% user.orders.forEach(order => { %>
+    <li>Order ID: <%= order._id %> - Total: <%= order.total %></li>
+    <% }) %>
+    <% } else { %>
+      <li>No orders yet</li>
+      <% } %>
+
+  </ul>
+
+  <h3 class="text-lg font-bold mt-6">Cart</h3>
+  <ul class="list-disc pl-5 mb-4">
+    <% if(user.cart.length){ %>
+    <% user.cart.forEach(item => { %>
+    <li><%= item.name %> - Quantity: <%= item.quantity %></li>
+    <% }) %>
+    <% } else { %>
+      <li>No items in cart</li>
+      <% } %>
+  </ul>
+  <a href="/users/edit/<%= user._id %>" class="bg-blue-600 px-4 py-2 rounded-md text-white hover:bg-blue-300">Edit Profile</a>
+</div>
+
+
+
+
+</div>
+
+
+<%- include('./partials/footer') %>

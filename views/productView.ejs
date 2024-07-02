@@ -1,0 +1,57 @@
+<%- include('./partials/header') %>
+
+<div class="container mx-auto  mt-10 ">
+  <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+      <h1 class="text-3xl font-bold mb-4"><%= product.name.toUpperCase() %></h1>
+      <img src="data:image/jpeg;base64,<%= product.image.toString('base64') %>" alt="<%= product.name %>" class="w-1/4 h-1/3 object-cover mb-4">
+      <p class="text-gray-700 text-lg mb-4"><%= product.description %></p>
+      
+      <p class="text-lg mb-4">Delivery Date: <%= new Date().toLocaleDateString() %></p>
+      <div class="mb-4">
+        <% const userRating = user.ratedProducts.find(r => r.productId.toString() === product._id.toString()); %>
+        <% if(!userRating){ %>
+          <form action="/products/<%= product._id %>/rate" method="POST">
+              <label for="rating" class="block text-gray-700">Rate this product:</label>
+              <select name="rating" id="rating" class="w-20 px-4 py-2 border rounded" required>
+                  <option value="1" <%= product.rating == 1 ? 'selected' : '' %>>1</option>
+                  <option value="2" <%= product.rating == 2 ? 'selected' : '' %>>2</option>
+                  <option value="3" <%= product.rating == 3 ? 'selected' : '' %>>3</option>
+                  <option value="4" <%= product.rating == 4 ? 'selected' : '' %>>4</option>
+                  <option value="5" <%= product.rating == 5 ? 'selected' : '' %>>5</option>
+              </select>
+              <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 mt-2">Submit Rating</button>
+          </form>
+          <% } else { %>
+              <h1>Rating:  <%= sum / product.rating.length  %>/5
+              </h1> 
+            <% } %>
+      </div>
+      <div class="mb-4">
+          <h2 class="text-2xl font-bold mb-4">Comments</h2>
+          <form action="/products/<%= product._id %>/comment" method="POST" class="flex flex-col">
+              <label for="comment" class="block text-gray-700">Add a comment:</label>
+              <textarea name="comment" id="comment" rows="3" class="w-1/3 px-4 py-2 border rounded" required></textarea>
+              <input type="hidden" name="date" id="" value="<%= new Date().toLocaleDateString() %>">
+              <button type="submit" class="bg-blue-500 w-full sm:w-1/5  text-white px-4 py-2 rounded hover:bg-blue-700 mt-2">Post Comment</button>
+          </form>
+          <div class="mt-4 sm:w-1/3 w-full">
+            <h2 class="text-md text-zinc-800">Users Comments</h2>
+              <% product.comments.forEach(function(comment) { %>
+                  <div class="bg-gray-200 p-4 rounded mb-4">
+                      <p><strong><%= comment.userId.fullname %></strong><br> <span class="text-gray-600"><%= new Date(comment.date).toLocaleDateString() %></span></p>
+                      <p><%= comment.comment %></p>
+                  </div>
+              <% }); %>
+          </div>
+      </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+<%- include('./partials/footer') %>

@@ -1,0 +1,78 @@
+<%- include('./partials/header') %>
+
+<% if(success.length>0){ %>
+    <div class="absolute top-5 left-1/2 -translate-x-1/2 -translate-y-1/2 p-3 rounded-md bg-blue-500">
+        <span class="inline-block mt-1 mb-1 text-white">
+            <%= success %>
+        </span>
+    </div>
+    <% } %>
+<% if(cartData.length > 0) { %>
+<div class="container mx-auto mt-10">
+    <h1 class="text-3xl font-bold mb-6 text-center">Shopping Cart</h1>
+    <table class="min-w-full bg-white rounded-lg shadow-md">
+        <thead>
+            <tr>
+                <th class="px-4 py-2">Item Image</th>
+                <th class="px-4 py-2">Name</th>
+                <th class="px-4 py-2">Price</th>
+                <th class="px-4 py-2">Quantity</th>
+                <th class="px-4 py-2">Discount</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            <% cartData.forEach(function(item) { %>
+                <% if(item.quantity > 0) { %> 
+            <tr>
+                <td class="border px-4 py-2">
+                    <img src="data:image/jpeg;base64,<%= item.image.toString('base64')  %> " alt="<%= item.name %>" class="w-16 h-16 object-cover">
+                </td>
+                <td class="border px-4 py-2"><%= item.name %></td>
+                <td class="border px-4 py-2">₹ <%= item.price %></td>
+                <td class="border px-4 py-2">
+                    <div class="flex items-center justify-center">
+                        <a href="/decrease/<%= item.productId %>" class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-700">-</a>
+                        <span href="" class="mx-4"><%= item.quantity %></span>
+                        <a href="/increase/<%= item.productId %>" class="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-700">+</a>
+                    </div>
+                </td>
+                <td class="border px-4 py-2"> ₹ <%= item.discount %> </td>
+                
+            </tr>
+            <% } %>
+            <% }); %>
+        </tbody>
+    </table>
+    <div class="bg-white rounded-lg shadow-md mt-6 p-6">
+        <h2 class="text-2xl font-bold mb-4">Cart Summary</h2>
+        <p class="text-lg">Total MRP:₹ <%= t %></p>
+        <p class="text-lg">Total Discount: ₹<%= d %></p>
+
+        <p class="text-lg">Total: ₹<%= Total %></p>
+
+        <p class="text-lg">Items: 
+            <% cartData.forEach(function(item, index) { %>
+                <%= item.name %><%= index < cartData.length - 1 ? ', ' : '' %>
+            <% }); %>
+        </p>
+    </div>
+    <form action="/orders" method="POST" class="mt-6 bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-2xl font-bold mb-4">Order Details</h2>
+        <input type="hidden" name="total" value="<%= Total %>">
+        <input type="hidden" name="items" value="<%= cartData.map(item => item.name).join(', ') %>">
+        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Proceed to Order</button>
+    </form>
+</div>
+
+<% } else { %>
+    <div class="container mx-auto mt-10">
+        <h1 class="text-3xl font-bold mb-6 text-center">Shopping Cart</h1>
+
+         <div class="flex justify-center align-center gap-5 text-center mt-10 ">
+            <h3>Your Cart Is empty</h3>
+            <a  href="/shop" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Shop Now</a>
+         </div>
+        </div>
+    <% } %>
+    <%- include('./partials/footer') %>
